@@ -1,0 +1,1192 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+{% block lead %}<b>Welcome to iGEM 2023!</b> Your team has been approved and you are ready to start the iGEM season!{% endblock %}
+
+{% block page_content %}
+
+
+<div class="row" style="font-family: sans-serif;">
+  <div class="homepage-banner">
+      <img src="{{ url_for('static', filename='assets/image1.png') }}" alt="Image 1" class="image1">
+      <img src="{{ url_for('static', filename='assets/image2.png') }}" alt="Image 2" class="image2">
+      <div class="flickering-text">Bacteriophages VS Parkinson's Disease</div>
+  </div>
+  <div class="zoom-container">
+      <img src="{{ url_for('static', filename='assets/image3.png') }}" alt="Image 3" class="zoom-image">
+      <img src="{{ url_for('static', filename='assets/image4.png') }}" alt="Overlay Image" class="overlay-image">
+  </div>
+  <img src="{{ url_for('static', filename='assets/image5.png') }}" alt="Image 5" class="image5">
+
+  <!-- <img src="{{ url_for('static', filename='assets/image6.png') }}" alt="Image 6" class="image6"> -->
+
+  <div class="image6-container">
+    <img src="{{ url_for('static', filename='assets/image6.png') }}" alt="Image 6" class="image6">
+    <img src="{{ url_for('static', filename='assets/image7.png') }}" alt="Image 7" class="image7">
+  </div>
+  <div class="image8-container">
+    <img src="{{ url_for('static', filename='assets/image8.png') }}" alt="Image 8" class="image8">
+    <img src="{{ url_for('static', filename='assets/image9.png') }}" alt="Image 9" class="image9">
+  </div>
+  <img src="{{ url_for('static', filename='assets/image10.png') }}" alt="Image 10" class="image10">
+
+  
+</div>
+
+
+
+<script>
+window.onload = function() {
+    document.body.style.overflow = 'auto'; // ensure the page is scrollable
+    window.scrollTo(0, 0); // scroll to the top
+}
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    let desiredZoomDepth = 20;
+    let desiredSlideDepth = -450;
+    const a = 0.00000003;
+    let zoomInProgress = false;
+    let accumulatedDelta = 0;
+
+    const updateZoom = (delta) => {
+        const image = document.querySelector('.zoom-image');
+        const overlayImage = document.querySelector('.overlay-image');
+        
+        accumulatedDelta += delta;
+        let scaleIncrement = a * Math.pow(accumulatedDelta, 2) ;
+        let scale = 1 + scaleIncrement;
+
+        if (overlayImage.style.left === '' || parseFloat(overlayImage.style.left) > desiredSlideDepth) {
+            let slideAmount = parseFloat(overlayImage.style.left || '0') - delta * 1;
+            if (slideAmount < desiredSlideDepth) slideAmount = desiredSlideDepth;
+            overlayImage.style.left = `${slideAmount}px`;
+            return;
+        }
+
+        if (delta > 0 && scale >= desiredZoomDepth) {
+            scale = desiredZoomDepth;
+            document.body.style.overflow = 'auto';
+            zoomInProgress = false;
+            
+            // Start the fade out process
+            image.style.opacity = 0;
+            image.addEventListener('transitionend', function() {
+                document.body.style.background = 'black'; // Change the background to black
+                // image.style.position = 'absolute';
+
+            }, {once: true});  // Ensures the event listener only fires once
+        } else if (delta < 0 && scale <= 1) {
+            scale = 1;
+            document.body.style.overflow = 'auto';
+            zoomInProgress = false;
+        }
+
+        image.style.transform = `scale(${scale})`;
+    };
+
+    const onScroll = function(event) {
+        const image = document.querySelector('.zoom-image');
+        const imageBottom = image.getBoundingClientRect().bottom;
+        const windowHeight = window.innerHeight;
+
+        if (zoomInProgress || imageBottom <= windowHeight) {
+            event.preventDefault();
+            updateZoom(event.deltaY);
+            if (!zoomInProgress && imageBottom <= windowHeight) {
+                document.body.style.overflow = 'hidden';
+                zoomInProgress = true;
+            }
+        }
+    };
+
+
+    
+
+    const reloadWithDelay = () => {
+        setTimeout(() => {
+            location.reload();
+        }, 500);
+    };
+
+    // This will intercept the default reload behavior from key commands.
+    document.addEventListener('keydown', function(event) {
+        const isCmdOrCtrl = event.ctrlKey || event.metaKey;
+        if (isCmdOrCtrl && String.fromCharCode(event.which).toLowerCase() === 'r') {
+            event.preventDefault();
+            reloadWithDelay();
+        }
+    });
+
+    window.addEventListener('wheel', onScroll);
+});
+
+
+
+// ??????????????????????????? it was uncommented
+// document.addEventListener('DOMContentLoaded', function() {
+//     const image6 = document.querySelector('.image6');
+//     const image7 = document.querySelector('.image7');
+//     let animationStarted = false;
+
+//     // Reset position of image7
+//     resetImage7Position();
+
+//     function resetImage7Position() {
+//         image7.style.left = '0%';
+//         image7.style.transform = 'translateY(-50%) translateX(-100%)';
+//         image7.style.animation = 'none'; // remove any animation
+//     }
+
+//     setTimeout(() => {
+//         window.addEventListener('scroll', function() {
+//             const image6BottomPosition = image6.getBoundingClientRect().bottom;
+//             const windowHeight = window.innerHeight;
+
+//             if (image6BottomPosition <= windowHeight && !animationStarted) {
+//                 animationStarted = true;
+//                 image7.style.animation = "circularMove 2s forwards";
+//             }
+//         });
+//     }, 500); // delay of 500ms
+// });
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     const image6 = document.querySelector('.image6');
+//     const image7 = document.querySelector('.image7');
+//     const image8 = document.querySelector('.image8');
+//     const image9 = document.querySelector('.image9');
+
+//     let image7AnimationStarted = false;
+//     let image9AnimationStarted = false;
+
+//     // Reset position of image7 and image9
+//     resetImage7Position();
+//     resetImage9Position();
+
+//     function resetImage7Position() {
+//         image7.style.left = '0%';
+//         image7.style.transform = 'translateY(-50%) translateX(-100%)';
+//         image7.style.animation = 'none'; // remove any animation
+//     }
+
+//     function resetImage9Position() {
+//         image9.style.left = '0%';
+//         image9.style.transform = 'translateY(-50%) translateX(-100%)';
+//         image9.style.transition = 'left 2s';
+//     }
+
+//     setTimeout(() => {
+//         window.addEventListener('scroll', function() {
+//             // Image 7 condition
+//             const image6BottomPosition = image6.getBoundingClientRect().bottom;
+//             const image8BottomPosition = image8.getBoundingClientRect().bottom;
+//             const windowHeight = window.innerHeight;
+
+//             if (image6BottomPosition <= windowHeight && !image7AnimationStarted) {
+//                 image7AnimationStarted = true;
+//                 image7.style.animation = "circularMove 2s forwards";
+//             }
+
+//             // Image 9 condition
+//             if (image8BottomPosition <= windowHeight && !image9AnimationStarted) {
+//                 image9AnimationStarted = true;
+//                 image9.style.left = '70%'; // 50% to get it to the center minus half the width of the image (assuming image width is 10%)
+//             }
+//         });
+//     }, 500); // delay of 500ms
+// });
+
+let shouldReload = false;
+
+window.addEventListener('beforeunload', function(event) {
+    if (!shouldReload) {
+        event.preventDefault();
+        event.returnValue = "Wait for 500ms before reloading. Click 'Cancel' and the page will reload automatically.";
+
+        setTimeout(function() {
+            shouldReload = true;
+            location.reload();
+        }, 500);
+
+        return "Wait for 500ms before reloading. Click 'Cancel' and the page will reload automatically.";
+    }
+});
+
+
+
+// latest
+document.addEventListener('DOMContentLoaded', function() {
+    const image6 = document.querySelector('.image6');
+    const image7 = document.querySelector('.image7');
+    const image8 = document.querySelector('.image8');
+    const image9 = document.querySelector('.image9');
+
+    let image7AnimationStarted = false;
+    let image9AnimationStarted = false;
+
+    // Reset position of image7 and image9
+    resetImage7Position();
+    resetImage9Position();
+
+    function resetImage7Position() {
+        image7.style.left = '0%';
+        image7.style.transform = 'translateY(-50%) translateX(-100%)';
+        image7.style.animation = 'none'; // remove any animation
+    }
+
+    function resetImage9Position() {
+        image9.style.left = '0%';
+        image9.style.transform = 'translateY(-50%) translateX(-100%)';
+        image9.style.transition = 'left 2s';
+    }
+
+    let lastKnownScrollY = 0;
+    let ticking = false;
+
+    function doSomething() {
+        const image6BottomPosition = image6.getBoundingClientRect().bottom;
+        const image8BottomPosition = image8.getBoundingClientRect().bottom;
+        const windowHeight = window.innerHeight;
+
+        if (image6BottomPosition <= windowHeight && !image7AnimationStarted) {
+            image7AnimationStarted = true;
+            image7.style.animation = "circularMove 2s forwards";
+        }
+
+        if (image8BottomPosition <= windowHeight && !image9AnimationStarted) {
+            image9AnimationStarted = true;
+            image9.style.left = '70%';
+        }
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        lastKnownScrollY = window.scrollY;
+
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                doSomething(lastKnownScrollY);
+                ticking = false;
+            });
+
+            ticking = true;
+        }
+    });
+});
+
+// 2??
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     let desiredSlideDepth = -450;
+//     const a = 0.00000003;
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+
+//     const image = document.querySelector('.zoom-image');
+//     const overlayImage = document.querySelector('.overlay-image');
+//     const image6 = document.querySelector('.image6');
+//     const image7 = document.querySelector('.image7');
+//     const image8 = document.querySelector('.image8');
+//     const image9 = document.querySelector('.image9');
+
+//     // Zoom functionality
+//     const updateZoom = (delta) => {
+//         accumulatedDelta += delta;
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2);
+//         let scale = 1 + scaleIncrement;
+
+//         if (overlayImage.style.left === '' || parseFloat(overlayImage.style.left) > desiredSlideDepth) {
+//             let slideAmount = parseFloat(overlayImage.style.left || '0') - delta * 1;
+//             if (slideAmount < desiredSlideDepth) slideAmount = desiredSlideDepth;
+//             overlayImage.style.left = `${slideAmount}px`;
+//             return;
+//         }
+
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+            
+//             image.style.opacity = 0;
+//             image.addEventListener('transitionend', function() {
+//                 document.body.style.background = 'black';
+//             }, {once: true});
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress || imageBottom <= windowHeight) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//             if (!zoomInProgress && imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     // Logic for image6 and image9
+//     let image7AnimationStarted = false;
+//     let image9AnimationStarted = false;
+
+//     function resetImage7Position() {
+//         image7.style.left = '0%';
+//         image7.style.transform = 'translateY(-50%) translateX(-100%)';
+//         image7.style.animation = 'none'; 
+//     }
+
+//     function resetImage9Position() {
+//         image9.style.left = '0%';
+//         image9.style.transform = 'translateY(-50%) translateX(-100%)';
+//         image9.style.transition = 'left 2s';
+//     }
+
+//     resetImage7Position();
+//     resetImage9Position();
+
+//     function doSomething() {
+//         const image6BottomPosition = image6.getBoundingClientRect().bottom;
+//         const image8BottomPosition = image8.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (image6BottomPosition <= windowHeight && !image7AnimationStarted) {
+//             image7AnimationStarted = true;
+//             image7.style.animation = "circularMove 2s forwards";
+//         }
+
+//         if (image8BottomPosition <= windowHeight && !image9AnimationStarted) {
+//             image9AnimationStarted = true;
+//             image9.style.left = '70%';
+//         }
+//     }
+
+//     function debounce(func, wait = 10, immediate = true) {
+//         let timeout;
+//         return function() {
+//             const context = this, args = arguments;
+//             const later = function() {
+//                 timeout = null;
+//                 if (!immediate) func.apply(context, args);
+//             };
+//             const callNow = immediate && !timeout;
+//             clearTimeout(timeout);
+//             timeout = setTimeout(later, wait);
+//             if (callNow) func.apply(context, args);
+//         };
+//     }
+
+//     window.addEventListener('wheel', onScroll);
+//     window.addEventListener('scroll', debounce(doSomething));
+// });
+
+
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     let desiredSlideDepth = -450;
+//     const a = 0.0000000003;
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         const overlayImage = document.querySelector('.overlay-image');
+        
+//         accumulatedDelta += delta;
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.002 * accumulatedDelta;
+//         let scale = 1 + scaleIncrement;
+
+//         if (overlayImage.style.left === '' || parseFloat(overlayImage.style.left) > desiredSlideDepth) {
+//             let slideAmount = parseFloat(overlayImage.style.left || '0') - delta * 1;
+//             if (slideAmount < desiredSlideDepth) slideAmount = desiredSlideDepth;
+//             overlayImage.style.left = `${slideAmount}px`;
+//             return;
+//         }
+
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+            
+//             // Start the fade out process
+//             image.style.opacity = 0;
+//             image.addEventListener('transitionend', function() {
+//                 document.body.style.background = 'black'; // Change the background to black
+//                 image.remove(); // Remove the zoom-image from the DOM
+//             }, {once: true});  // Ensures the event listener only fires once
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress || imageBottom <= windowHeight) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//             if (!zoomInProgress && imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     let desiredSlideDepth = -450;  // Define the left offset in pixels for overlay slide
+//     const a = 0.0000000003;  // You can adjust this value if needed
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         const overlayImage = document.querySelector('.overlay-image');
+        
+//         accumulatedDelta += delta;
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.005 * accumulatedDelta;  // Further reduced the linear coefficient
+//         let scale = 1 + scaleIncrement;
+
+//         if (overlayImage.style.left === '' || parseFloat(overlayImage.style.left) > desiredSlideDepth) {
+//             let slideAmount = parseFloat(overlayImage.style.left || '0') - delta * 1;
+//             if (slideAmount < desiredSlideDepth) slideAmount = desiredSlideDepth;
+//             overlayImage.style.left = `${slideAmount}px`;
+//             return; // Don't zoom the image yet
+//         }
+
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress || imageBottom <= windowHeight) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//             if (!zoomInProgress && imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';  // Freeze scrolling
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     let desiredSlideDepth = -450;  // Define the left offset in pixels for overlay slide
+//     const a = 0.00000000003;
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         const overlayImage = document.querySelector('.overlay-image');
+        
+//         accumulatedDelta += delta;
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.003 * accumulatedDelta;
+//         let scale = 1 + scaleIncrement;
+
+//         if (overlayImage.style.left === '' || parseFloat(overlayImage.style.left) > desiredSlideDepth) {
+//             let slideAmount = parseFloat(overlayImage.style.left || '0') - delta * 0.25;
+//             if (slideAmount < desiredSlideDepth) slideAmount = desiredSlideDepth;
+//             overlayImage.style.left = `${slideAmount}px`;
+//             return; // Don't zoom the image yet
+//         }
+
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress || imageBottom <= windowHeight) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//             if (!zoomInProgress && imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';  // Freeze scrolling
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     let desiredSlideDepth = -180;  // Define the left offset in pixels for overlay slide
+//     const a = 0.0000000005;
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+//     const slideSpeed = 5;  // You can adjust this value for faster or slower sliding
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         const overlayImage = document.querySelector('.overlay-image');
+        
+//         accumulatedDelta += delta;
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.003 * accumulatedDelta;
+//         let scale = 1 + scaleIncrement;
+
+//         let currentLeft = parseFloat(overlayImage.style.left || '0');
+//         if (currentLeft > desiredSlideDepth && delta > 0) {
+//             let slideAmount = currentLeft - slideSpeed; // Use a consistent slide value
+//             overlayImage.style.left = `${slideAmount}px`;
+//             return; // Don't zoom the image yet
+//         }
+
+//         // If we have fully slid the image or delta is negative (indicating a downward scroll), then we start the zooming
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress || imageBottom <= windowHeight) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//             if (!zoomInProgress && imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';  // Freeze scrolling
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     let desiredSlideDepth = -180;  // Define the left offset in pixels for overlay slide
+//     const a = 0.0000000005;
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+//     const slideSpeed = 2;  // You can adjust this value for faster or slower sliding
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         const overlayImage = document.querySelector('.overlay-image');
+        
+//         accumulatedDelta += delta;
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.003 * accumulatedDelta;
+//         let scale = 1 + scaleIncrement;
+
+//         let currentLeft = parseFloat(overlayImage.style.left || '0');
+//         if (currentLeft > desiredSlideDepth && delta > 0) {
+//             let slideAmount = currentLeft - slideSpeed; // Use a consistent slide value
+//             if (slideAmount < desiredSlideDepth) slideAmount = desiredSlideDepth;
+//             overlayImage.style.left = `${slideAmount}px`;
+//             return; // Don't zoom the image yet
+//         }
+
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress || imageBottom <= windowHeight) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//             if (!zoomInProgress && imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';  // Freeze scrolling
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+
+ 
+
+// zoomin in and zoomin out->problem
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 20;
+//     const a = 0.0000000005;
+//     let zoomInProgress = false;
+//     let accumulatedDelta = 0;
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         accumulatedDelta += delta;
+
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.003 * accumulatedDelta;
+//         let scale = 1 + scaleIncrement;
+
+//         if (delta > 0 && scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         } else if (delta < 0 && scale <= 1) {
+//             scale = 1;
+//             document.body.style.overflow = 'auto';
+//             zoomInProgress = false;
+//         }
+
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (zoomInProgress) {
+//             event.preventDefault();
+//             updateZoom(event.deltaY);
+//         } else if (imageBottom <= windowHeight) {
+//             document.body.style.overflow = 'hidden';  // Freeze scrolling
+//             zoomInProgress = true;
+//             updateZoom(event.deltaY);
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// latest
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 10;
+//     const a = 0.0000000005;
+//     let zoomInProgress = false;  // Flag to know if we're currently zooming or not.
+//     let accumulatedDelta = 0;   // This will store the accumulated scroll value while zooming.
+
+//     const updateZoom = (delta) => {
+//         const image = document.querySelector('.zoom-image');
+//         accumulatedDelta += delta;
+
+//         let scaleIncrement = a * Math.pow(accumulatedDelta, 2) + 0.003 * accumulatedDelta;
+//         let scale = 1 + scaleIncrement;
+
+//         if (scale >= desiredZoomDepth) {
+//             scale = desiredZoomDepth;
+//             document.body.style.overflow = 'auto';  // Re-enable scrolling
+//             zoomInProgress = false;
+//         }
+        
+//         image.style.transform = `scale(${scale})`;
+//     };
+
+//     const onScroll = function(event) {
+//         if (zoomInProgress) {
+//             // If zooming is in progress, prevent actual scroll and adjust the zoom instead.
+//             event.preventDefault();
+//             updateZoom(event.deltaY > 0 ? 10 : -10);  // You can adjust the value 10 to increase or decrease the sensitivity.
+//         } else {
+//             const image = document.querySelector('.zoom-image');
+//             const imageBottom = image.getBoundingClientRect().bottom;
+//             const windowHeight = window.innerHeight;
+
+//             // If the bottom of the image has hit the bottom of the viewport and we are not zooming yet
+//             if (imageBottom <= windowHeight) {
+//                 document.body.style.overflow = 'hidden';  // Freeze scrolling
+//                 zoomInProgress = true;
+//             }
+//         }
+//     };
+
+//     window.addEventListener('wheel', onScroll);
+// });
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 2; 
+//     const a = 0.0000000005;
+
+//     document.addEventListener('scroll', function() {
+//         const image = document.querySelector('.zoom-image');
+//         const imageBottom = image.getBoundingClientRect().bottom;
+//         const windowHeight = window.innerHeight;
+
+//         if (imageBottom <= windowHeight) {
+//             let distanceFromBottom = windowHeight - imageBottom;
+//             let scaleIncrement = a * Math.pow(distanceFromBottom, 2) + 0.0014 * distanceFromBottom;
+//             let scale = 1 + scaleIncrement;
+//             image.style.transform = `scale(${scale})`;
+
+//             if (scale >= desiredZoomDepth) {
+//                 document.body.style.overflow = 'auto'; 
+//             }
+//         } else {
+//             image.style.transform = `scale(1)`;
+//         }
+//     });
+// });
+
+
+//     document.addEventListener('scroll', function() {
+//         const image = document.querySelector('.zoom-image');
+//         const imageRect = image.getBoundingClientRect();
+
+//         let viewportBottom = window.pageYOffset + window.innerHeight;
+//         let imageBottomAbsolute = imageRect.bottom + window.pageYOffset;
+
+//         if (viewportBottom >= imageBottomAbsolute) {
+//             // The difference between the bottom of the viewport and the bottom of the image.
+//             let scrollFactor = viewportBottom - imageBottomAbsolute;
+//             let scaleIncrement = a * Math.pow(scrollFactor, 2) + 0.0014 * scrollFactor;
+//             let scale = 1 + scaleIncrement;
+            
+//             // We only adjust the scale, and no horizontal translation is applied.
+//             image.style.transform = `scale(${scale})`;
+
+//             if (scale >= desiredZoomDepth) {
+//                 document.body.style.overflow = 'auto'; 
+//             }
+//         } else {
+//             // Reset to default size when not in zoom region
+//             image.style.transform = `scale(1)`;
+//         }
+//     });
+// });
+
+
+// For concept kit not the 3d design of ours.
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 2; // Adjust this to your desired zoom level.
+//     const a = 0.0000000005; // This coefficient controls the curve of our quadratic function.
+//     let lastScrollTop = 0; // Store the last scroll position
+
+//     document.addEventListener('scroll', function() {
+//         const image = document.querySelector('.zoom-image');
+//         const imageTop = image.getBoundingClientRect().top;
+
+//         let st = window.pageYOffset || document.documentElement.scrollTop; // Get current scroll position
+
+//         if (imageTop <= 0) {
+//             let scrollFactor = Math.abs(imageTop); // Use the absolute value to ensure it's positive
+
+//             // Determine zoom in/out based on scroll direction
+//             if (st > lastScrollTop) { // Scrolling down
+//                 let scaleIncrement = a * Math.pow(scrollFactor, 2) + 0.0014 * scrollFactor;
+//                 let scale = 1 + scaleIncrement;
+//                 let translateXValue = -50 - (imageTop * 0.015);
+//                 image.style.transform = `translateX(${translateXValue}%) scale(${scale})`;
+
+//                 if (scale >= desiredZoomDepth) {
+//                     document.body.style.overflow = 'auto'; // Re-enable scrolling
+//                 }
+//             } else { // Scrolling up
+//                 let scale = 1; // Reset to default size when scrolling up or you can give a decrement formula
+//                 image.style.transform = `translateX(-50%) scale(${scale})`;
+//             }
+//         }
+
+//         lastScrollTop = st; // Store the current scroll position for the next comparison
+//     });
+// });
+
+//   document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 2; // Adjust this to your desired zoom level.
+//     const a = 0.0000000005; // This is a small coefficient to control the curve of our quadratic function. Adjust as necessary.
+
+//     document.addEventListener('scroll', function() {
+//         const image = document.querySelector('.zoom-image');
+//         const imageTop = image.getBoundingClientRect().top;
+        
+//         if (imageTop <= 0) {
+//             let scrollFactor = Math.abs(imageTop); // Use the absolute value to ensure it's positive
+//             let scaleIncrement = a * Math.pow(scrollFactor, 2) + 0.0014 * scrollFactor;
+//             let scale = 1 + scaleIncrement; 
+//             let translateXValue = -50 - (imageTop * 0.015);
+            
+//             image.style.transform = `translateX(${translateXValue}%) scale(${scale})`;
+
+//             if (scale >= desiredZoomDepth) {
+//                 document.body.style.overflow = 'auto';  // Re-enable scrolling
+//             }
+//         }
+//     });
+// });
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     let desiredZoomDepth = 2; // Adjust this to your desired zoom level.
+
+//     document.addEventListener('scroll', function() {
+//         const image = document.querySelector('.zoom-image');
+//         const imageTop = image.getBoundingClientRect().top;
+        
+//         if (imageTop <= 0) {
+//             let scale = 1 - imageTop * 0.001; 
+//             let translateXValue = -50 - (imageTop * 0.01);
+//             image.style.transform = `translateX(${translateXValue}%) scale(${scale})`;
+
+//             if (scale >= desiredZoomDepth) {
+//                 document.body.style.overflow = 'auto';  // Re-enable scrolling
+//             }
+//         }
+//     });
+// });
+
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     document.addEventListener('scroll', function() {
+//         const image = document.querySelector('.zoom-image');
+//         const imageTop = image.getBoundingClientRect().top;
+        
+//         if (imageTop <= 0) {
+//             let scale = 1 - imageTop * 0.001; // Adjust this for faster zooming
+//             let translateXValue = -50 - (imageTop * 0.01); // This will move the image to the left as you zoom. Adjust the 0.01 to control how fast it moves
+//             image.style.transform = `translateX(${translateXValue}%) scale(${scale})`;
+//         }
+//     });
+// });
+
+
+</script>
+
+
+
+
+
+  <!-- <div class="our-mission-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+          <div class="our-mission-text-container">
+            <p class="our-mission-text-container-title">Our Mission</p>
+            <p class="our-mission-text-container-text">“SCENTIPD represents a collaboration between science and society to proactively combat the complications of Parkinson disease.”</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- <div class="carousel-banner">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6 text-container">
+          <h2 class="carousel-banner-scentipd-title">SCENTIPD</h2>
+          <hr class="hr-under-scentipd">
+          <p class="carousel-banner-title">
+            Our proposed method for this detection is to use the M13 bacteriophage as a colorimetric biosensor. This technique utilizes the phage's 
+            capsid proteins, which can obtain affinity for the target compounds through genetic engineering. This procedure is being currently used 
+            for other purposes, including TNT detection. After the VOC-protein binding has occurred, the phages “swell”, changing the way they interact 
+            with light and finally giving off a different color. This color is structural (not dependent on dyes) and non-iridescent (not affected by the 
+            viewing angle), and can then be captured and quantified by a camera. The desired peptide sequence for each VOC is typically derived through 
+            phage display, although bioinformatic techniques can also be used for the same outcome, namely molecular docking.
+          </p>
+          <div class="row first-row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 icon-section">
+              <img src="https://static.igem.wiki/teams/4810/wiki/icon-laboratory.png" width="40px" height="40px" alt="lab image" class="icon-carousel-banner"><span>Chemistry Testing</span>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 icon-section">
+              <img src="https://static.igem.wiki/teams/4810/wiki/biological-evaluation.png" width="40px" height="40px" alt="lab image" class="icon-carousel-banner"><span>Biological Evaluation</span>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 icon-section">
+              <img src="https://static.igem.wiki/teams/4810/wiki/electrical-signals.png" width="40px" height="40px" alt="lab image" class="icon-carousel-banner"><span>Electrical Signals</span>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 col-xxl-6 icon-section">
+              <img src="https://static.igem.wiki/teams/4810/wiki/toxicological-assessment.png" width="40px" height="40px" alt="lab image" class="icon-carousel-banner"><span>Toxicological Assessment</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 col-xxl-6 carousel-container">
+          <div class="container-cards">
+            <div class="carousel-banner-card">
+              <a href="https://2023.igem.wiki/athens/human-practices"><h3 class="title">Human Practices</h3>
+              <div class="bar">
+                <div class="emptybar"></div>
+                <div class="filledbar"></div>
+              </div>
+              <div class="text-of-card">
+                <p style="color: white;">
+                    Lorem ipsum dolor sit amet, detracto efficiantur per in, id decore ponderum legendos sed. Eu qui porro voluptua 
+                    instructior, labor oporteat partiendo eu duo. Ignota impedit officiis et duo. 
+                </p>  
+              </div></a>
+            </div>
+        
+            <div class="carousel-banner-card">
+              <a href="https://2023.igem.wiki/athens/parts"><h3 class="title">Parts</h3>
+              <div class="bar">
+                <div class="emptybar"></div>
+                <div class="filledbar"></div>
+              </div>
+              <div class="text-of-card">
+                <p style="color: white;">
+                    Lorem ipsum dolor sit amet, detracto efficiantur per in, id decore ponderum legendos sed. Eu qui porro voluptua 
+                    instructior, labor oporteat partiendo eu duo. Ignota impedit officiis et duo. 
+                </p>  
+              </div></a>
+            </div>
+            
+            <div class="carousel-banner-card">
+              <a href="https://2023.igem.wiki/athens/model"><h3 class="title">Model</h3>
+              <div class="bar">
+                <div class="emptybar"></div>
+                <div class="filledbar"></div>
+              </div>
+              <div class="text-of-card">
+                <p style="color: white;">
+                    Lorem ipsum dolor sit amet, detracto efficiantur per in, id decore ponderum legendos sed. Eu qui porro voluptua 
+                    instructior, labor oporteat partiendo eu duo. Ignota impedit officiis et duo. 
+                </p>  
+              </div></a>
+            </div>
+            
+            <div class="carousel-banner-card">
+              <a href="https://2023.igem.wiki/athens/engineering"><h3 class="title">Engineering</h3>
+              <div class="bar">
+                <div class="emptybar"></div>
+                <div class="filledbar"></div>
+              </div>
+              <div class="text-of-card">
+                <p style="color: white;">
+                    Lorem ipsum dolor sit amet, detracto efficiantur per in, id decore ponderum legendos sed. Eu qui porro voluptua 
+                    instructior, labor oporteat partiendo eu duo. Ignota impedit officiis et duo. 
+                </p>  
+              </div></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- <div class="chart-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 chart-info">
+          <p class="chart-section-title">Financial Cost</p>
+          <p class="chart-section-subtitle">In conjunction with its health implications, Parkinson's disease is also fiscally burdensome. Combined costs of detection 
+            tests and hospital visits are expected to reach 1 billion dollars by 2035</p>
+            <img src="https://static.igem.wiki/teams/4810/wiki/chart-parkinson.webp" alt="chart-parkinson" class="image-chart-parkinson"/>
+        </div>
+      </div>
+    </div>
+  </div> -->
+<!-- 
+  <div class="custom-shape-divider-top-numbers">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
+    </svg>
+  </div>  -->
+  <!-- <div class="information-numbers-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+          <div class="image-wrapper dna1 d-flex justify-content-center">
+            <img src="https://static.igem.wiki/teams/4810/wiki/dna2.svg" alt="dna-image"/>
+          </div>
+          <div class="image-wrapper dna2 d-flex justify-content-center">
+            <img src="https://static.igem.wiki/teams/4810/wiki/dna.svg" alt="dna-image"/>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+          <p class="information-number-title">To Put This Into Numbers...</p>
+          <p class="information-number">10,000,000</p>
+          <p class="information-number-subtitle">individuals affected by Parkinson's disease annually.</p>
+            
+          <p class="information-number">$51 billion</p>
+          <p class="information-number-subtitle">the total economic burden of PD including direct medical costs of $25 billion and $26 billion in indirect and non-medical costs.</p>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
+          <div class="image-wrapper dna3 d-flex justify-content-center">
+            <img src="https://static.igem.wiki/teams/4810/wiki/dna.svg" alt="dna-image"/>
+          </div>
+          <div class="image-wrapper dna4 d-flex justify-content-center">
+            <img src="https://static.igem.wiki/teams/4810/wiki/dna2.svg" alt="dna-image"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!-- <div class="custom-shape-divider-bottom-numbers">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
+    </svg>
+  </div>  -->
+
+  <!-- <div class="project-promotion-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+          <div class="project-promotion-container">
+            <p class="project-promotion-title">Project Promotion Video</p>
+            <div class="braindivider">
+              <div class="braindividermask"></div>
+              <span><i>&#129504;</i></span>
+            </div>
+            <div class="promotion-video-iframe">
+              <iframe title="Athens Promotional Video" style="box-shadow: 2px 2px 10px 10px rgba(163, 177, 198, 0.6)" width="560" height="315" src="../../static/images/promosubs.mp4" frameborder="0" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups">Watch our Promotional Video Here!</iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div> -->
+
+{% endblock %}
